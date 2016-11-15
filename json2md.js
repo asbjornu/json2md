@@ -35,6 +35,10 @@ function read(state) {
                 stream.on('end', () => {
                     fulfill({ fileName: state.fileName, content });
                 });
+
+                stream.on('error', (err) => {
+                    reject(err);
+                });
             }
         });
     });
