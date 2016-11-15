@@ -1,8 +1,8 @@
 {
   "name": "json2md",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Converts JSON into Markdown",
+  "main": "json2md.js",
   "dependencies": {
     "minimist": "^1.2.0"
   },
