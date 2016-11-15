@@ -57,7 +57,17 @@ function convert(state) {
             var linkIndex = 0;
             var body = article.body.replace(/"([^"]+)":([^, ]+)/gi, (match, p1, p2) => {
                 var link = { index: linkIndex++, url: p2 };
-                links.push(link);
+
+                var existingLink = links.filter((e, i, a) => {
+                    return e.url == p2;
+                });
+
+                if (existingLink) {
+                    link.index = existingLink.index;
+                } else {
+                    links.push(link);
+                }
+
                 return `[${p1}][${link.index}]`;
             });
 
