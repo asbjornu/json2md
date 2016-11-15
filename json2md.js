@@ -52,12 +52,30 @@ function convert(state) {
             reject(`ERROR: The file ${state.fileName} needs to be an array.`)
         }
 
+        for (let article of json) {
+            var links = [];
+            var linkIndex = 0;
+            var body = article.body.replace(/"([^"]+)":([^, ]+)/gi, (match, p1, p2) => {
+                var link = { index: linkIndex++, url: p2 };
+                links.push(link);
+                return `[${p1}][${link.index}]`;
+            });
+
+            body += '\n\n';
+
+            for (let link of links) {
+                body += `[${link.index}]: ${link.url}\n`;
+            }
+
+            console.log(body);
+        }
+
         fulfill(json.length);
     });
 }
 
 function end(length) {
-    console.log("Done!", length);
+    console.log(`Done converting ${length} articles.`);
 }
 
 function error(err) {
