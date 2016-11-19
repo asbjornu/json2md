@@ -356,7 +356,7 @@ class Textile
     var $doc_root;
 
 // -------------------------------------------------------------
-    function Textile()
+    function __construct()
     {
         $this->hlgn = "(?:\<(?!>)|(?<!<)\>|\<\>|\=|[()]+(?! ))";
         $this->vlgn = "[\-^~]";
@@ -1525,8 +1525,8 @@ class Textile
 // -------------------------------------------------------------
     function footnoteRef($text)
     {
-        return preg_replace('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/Ue',
-            '$this->footnoteID(\'\1\',\'\2\',\'\3\')', $text);
+        return preg_replace_callback('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/U',
+            array($this, 'footnoteID'), $text);
     }
 
 // -------------------------------------------------------------
