@@ -4,6 +4,7 @@
   "description": "Converts JSON into Markdown",
   "main": "json2md.js",
   "dependencies": {
+    "exec-php": "0.0.3",
     "minimist": "^1.2.0"
   },
   "devDependencies": {},

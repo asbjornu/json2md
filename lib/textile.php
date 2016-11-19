@@ -1,5 +1,17 @@
 <?php
 
+function convert($string) {
+    $textile = new Textile;
+    return $textile->TextileThis($string);
+}
+
+/*
+
+Copied from: https://raw.githubusercontent.com/neolao/wiki/master/.wiki/inc/textile/Textile.php
+
+*/
+
+
 /**
  * Example: get XHTML from a given Textile-markup string ($string)
  *

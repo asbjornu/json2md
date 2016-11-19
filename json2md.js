@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const argv = require('minimist')(process.argv.slice(2));
+const util = require("util");
 
 function validate(arguments) {
     return new Promise((fulfill, reject) => {
@@ -44,6 +45,37 @@ function read(state) {
     });
 }
 
+function convertTextile(body) {
+    console.log('Converting ' + body.substring(0, 40) + '...');
+    return new Promise((fulfill, reject) => {
+        var php = require('exec-php');
+
+        console.log('Required PHP');
+
+        php('./lib/textile.php', '/usr/local/bin/php', function(error, textile, output) {
+            console.log('Loaded textile.php');
+
+            if (error) {
+                return reject(error);
+            }
+
+            console.log('Did not receive an error.');
+
+            textile.convert(body, function(error, result, output, printed) {
+                console.log(util.inspect({error, result, output, printed}));
+
+                if (error) {
+                    return reject('Textile conversion failed.');
+                }
+
+                console.log('Conversion success!');
+
+                fulfill(result);
+            });
+        });
+    });
+}
+
 function convert(state) {
     return new Promise((fulfill, reject) => {
         var json = JSON.parse(state.content);
@@ -52,40 +84,20 @@ function convert(state) {
             reject(`ERROR: The file ${state.fileName} needs to be an array.`)
         }
 
-        for (let article of json) {
-            var links = [];
-            var linkIndex = 0;
-            var body = article.body.replace(/"([^"]+)":([^, ]+)/gi, (match, p1, p2) => {
-                var link = { index: linkIndex++, url: p2 };
+        var converters = json.map(article => convertTextile(article.body));
 
-                var existingLink = links.filter((e, i, a) => {
-                    return e.url == p2;
-                });
-
-                if (existingLink) {
-                    link.index = existingLink.index;
-                } else {
-                    links.push(link);
-                }
-
-                return `[${p1}][${link.index}]`;
+        return Promise.all(converters).then(convertedArticles => {
+            fulfill({
+                fileName: state.fileName,
+                content: state.content,
+                articleCount: json.length
             });
-
-            body += '\n\n';
-
-            for (let link of links) {
-                body += `[${link.index}]: ${link.url}\n`;
-            }
-
-            console.log(body);
-        }
-
-        fulfill(json.length);
+        }).catch(code => reject('Converting from Textile failed: ' + code));
     });
 }
 
-function end(length) {
-    console.log(`Done converting ${length} articles.`);
+function end(state) {
+    console.log(`Done converting ${state.articleCount} articles.`);
 }
 
 function error(err) {
