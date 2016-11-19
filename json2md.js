@@ -2,12 +2,12 @@
 
 const fs = require('fs');
 const argv = require('minimist')(process.argv.slice(2));
-const util = require("util");
+const textile = require('./lib/textile.js');
 
 function validate(arguments) {
     return new Promise((fulfill, reject) => {
         if (!arguments._ || !Array.isArray(arguments._) || arguments._.length != 1) {
-            reject("Usage: json2md.js [/file/to/convert.json]");
+            reject('Usage: json2md.js [/file/to/convert.json]');
         }
 
         var fileName = arguments._[0];
@@ -20,7 +20,7 @@ function read(state) {
     return new Promise((fulfill, reject) => {
         fs.open(state.fileName, 'r', (err, fd) => {
             if (err) {
-                if (err.code === "ENOENT") {
+                if (err.code === 'ENOENT') {
                     reject(`ERROR: The file ${state.fileName} does not exist.`);
                 } else {
                     reject(err);
@@ -45,37 +45,6 @@ function read(state) {
     });
 }
 
-function convertTextile(body) {
-    console.log('Converting ' + body.substring(0, 40) + '...');
-    return new Promise((fulfill, reject) => {
-        var php = require('exec-php');
-
-        console.log('Required PHP');
-
-        php('./lib/textile.php', '/usr/local/bin/php', function(error, textile, output) {
-            console.log('Loaded textile.php');
-
-            if (error) {
-                return reject(error);
-            }
-
-            console.log('Did not receive an error.');
-
-            textile.convert(body, function(error, result, output, printed) {
-                console.log(util.inspect({error, result, output, printed}));
-
-                if (error) {
-                    return reject('Textile conversion failed.');
-                }
-
-                console.log('Conversion success!');
-
-                fulfill(result);
-            });
-        });
-    });
-}
-
 function convert(state) {
     return new Promise((fulfill, reject) => {
         var json = JSON.parse(state.content);
@@ -84,7 +53,7 @@ function convert(state) {
             reject(`ERROR: The file ${state.fileName} needs to be an array.`)
         }
 
-        var converters = json.map(article => convertTextile(article.body));
+        var converters = json.map(article => textile.convert(article.body));
 
         return Promise.all(converters).then(convertedArticles => {
             fulfill({
