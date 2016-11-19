@@ -1,20 +1,8 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const argv = require('minimist')(process.argv.slice(2));
 const textile = require('./lib/textile.js');
-
-function validate(arguments) {
-    return new Promise((fulfill, reject) => {
-        if (!arguments._ || !Array.isArray(arguments._) || arguments._.length != 1) {
-            reject('Usage: json2md.js [/file/to/convert.json]');
-        }
-
-        var fileName = arguments._[0];
-
-        fulfill({ fileName });
-    });
-}
+const args = require('./lib/args.js');
 
 function read(state) {
     return new Promise((fulfill, reject) => {
@@ -74,7 +62,7 @@ function error(err) {
     process.exit(1);
 }
 
-validate(argv)
+args.validate()
     .then(read)
     .then(convert)
     .then(end)
