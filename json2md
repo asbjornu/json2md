@@ -7,7 +7,7 @@ const xml = require('./lib/xml.js');
 const util = require('util');
 
 function end(state) {
-    console.log(util.inspect(state));
+    // console.log(util.inspect(state));
     console.log(`Done converting ${state.articleCount} articles.`);
 }
 
