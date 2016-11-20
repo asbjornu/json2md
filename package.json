@@ -5,7 +5,9 @@
   "main": "json2md.js",
   "dependencies": {
     "exec-php": "0.0.3",
-    "minimist": "^1.2.0"
+    "jsdom": "^9.8.3",
+    "minimist": "^1.2.0",
+    "node-xml": "^1.0.2"
   },
   "devDependencies": {},
   "scripts": {

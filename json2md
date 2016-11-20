@@ -3,8 +3,11 @@
 const textile = require('./lib/textile.js');
 const args = require('./lib/args.js');
 const file = require('./lib/file.js');
+const xml = require('./lib/xml.js');
+const util = require('util');
 
 function end(state) {
+    console.log(util.inspect(state));
     console.log(`Done converting ${state.articleCount} articles.`);
 }
 
@@ -16,5 +19,6 @@ function error(err) {
 args.validate()
     .then(file.read)
     .then(textile.convert)
+    .then(xml.convert)
     .then(end)
     .catch(error);
