@@ -6,9 +6,9 @@
   "dependencies": {
     "exec-php": "0.0.3",
     "jsdom": "^9.8.3",
-    "minimist": "^1.2.0",
     "node-xml": "^1.0.2",
-    "speakingurl": "^11.0.0"
+    "speakingurl": "^11.0.0",
+    "yargs": "^6.6.0"
   },
   "devDependencies": {},
   "scripts": {
