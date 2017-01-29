@@ -20,5 +20,6 @@ args.validate()
     .then(file.read)
     .then(textile.convertToHtml)
     .then(html.convertToMarkdown)
+    .then(file.save)
     .then(end)
     .catch(error);
