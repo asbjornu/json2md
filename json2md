@@ -18,7 +18,7 @@ function error(err) {
 
 args.validate()
     .then(file.read)
-    .then(textile.convert)
-    .then(html.convert)
+    .then(textile.convertToHtml)
+    .then(html.convertToMarkdown)
     .then(end)
     .catch(error);
