@@ -3,7 +3,7 @@
 const textile = require('./lib/textile.js');
 const args = require('./lib/args.js');
 const file = require('./lib/file.js');
-const xml = require('./lib/xml.js');
+const html = require('./lib/html.js');
 const util = require('util');
 
 function end(state) {
@@ -19,6 +19,6 @@ function error(err) {
 args.validate()
     .then(file.read)
     .then(textile.convert)
-    .then(xml.convert)
+    .then(html.convert)
     .then(end)
     .catch(error);
